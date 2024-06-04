@@ -88,7 +88,7 @@ services:
             - "127.0.0.1:3000:3000"
         volumes:
             - grafana-storage:/var/lib/grafana
-            - ../../volkovlabs-variable-panel:/var/lib/grafana/plugins/volkovlabs-variable-panel
+            - ../../grafana_plugins/volkovlabs-variable-panel:/var/lib/grafana/plugins/volkovlabs-variable-panel
         environment:
             - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=100ms
 """
