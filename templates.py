@@ -83,7 +83,7 @@ volumes:
     grafana-storage:
 services: 
     grafana:
-        image: dlv/grafana:latest # Using custom image change dlv to grafana for official image
+        image: dextyson/dlv-grafana:latest # Using custom image change dlv to grafana for official image
         ports:
             - "127.0.0.1:3000:3000"
         volumes:
