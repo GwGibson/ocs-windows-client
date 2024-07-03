@@ -81,14 +81,13 @@ networks:
         external: true
 volumes:
     grafana-storage:
-services: 
+services:
     grafana:
         image: dextyson/dlv-grafana:latest # Using custom image change dlv to grafana for official image
         ports:
             - "127.0.0.1:3000:3000"
         volumes:
             - grafana-storage:/var/lib/grafana
-            - ../../grafana_plugins/volkovlabs-variable-panel:/var/lib/grafana/plugins/volkovlabs-variable-panel
         environment:
             - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=100ms
 """
@@ -136,7 +135,7 @@ SCRIPTS = {
         """\
         import subprocess
 
-        
+
         def bring_up_services():
             directories = ("ocs-site-configs", "influxdb", "crossbar", "grafana")
             compose_filename = "docker-compose.yaml"
@@ -160,7 +159,7 @@ SCRIPTS = {
                     check=True,
                 )
 
-                
+
         if __name__ == '__main__':
             bring_up_services()
         """
@@ -169,7 +168,7 @@ SCRIPTS = {
         """\
         import subprocess
 
-        
+
         def take_down_services():
             directories = ("ocs-site-configs", "influxdb", "crossbar", "grafana")
             compose_filename = "docker-compose.yaml"
@@ -189,7 +188,7 @@ SCRIPTS = {
 
                 subprocess.run(command, check=True)
 
-                
+
         if __name__ == '__main__':
             take_down_services()
         """
