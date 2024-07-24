@@ -134,13 +134,18 @@ SCRIPTS = {
     "up.py": textwrap.dedent(
         """\
         import subprocess
+        import platform
 
+        def get_docker_compose_command():
+            return ["docker-compose"] if platform.system() == "Windows" else ["docker", "compose"]
 
         def bring_up_services():
             directories = ("ocs-site-configs", "influxdb", "crossbar", "grafana")
             compose_filename = "docker-compose.yaml"
+            docker_compose_cmd = get_docker_compose_command()
+            
             for directory in directories:
-                print(f"Starting services in {directory}...")
+                print(f"Stopping services in {directory}...")
 
                 compose_file_path = (
                     compose_filename
@@ -150,7 +155,7 @@ SCRIPTS = {
 
                 subprocess.run(
                     [
-                        "docker-compose",
+                        *docker_compose_cmd,
                         "-f",
                         compose_file_path,
                         "up",
@@ -167,11 +172,16 @@ SCRIPTS = {
     "down.py": textwrap.dedent(
         """\
         import subprocess
+        import platform
 
+        def get_docker_compose_command():
+            return ["docker-compose"] if platform.system() == "Windows" else ["docker", "compose"]
 
         def take_down_services():
             directories = ("ocs-site-configs", "influxdb", "crossbar", "grafana")
             compose_filename = "docker-compose.yaml"
+            docker_compose_cmd = get_docker_compose_command()
+            
             for directory in directories:
                 print(f"Stopping services in {directory}...")
 
@@ -181,7 +191,7 @@ SCRIPTS = {
                     else f"./{directory}/{compose_filename}"
                 )
 
-                command = ["docker-compose", "-f", compose_file_path, "down"]
+                command = [*docker_compose_cmd, "-f", compose_file_path, "down"]
 
                 if directory == "crossbar":
                     command.append("-v")
