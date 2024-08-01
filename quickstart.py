@@ -1,3 +1,4 @@
+import argparse
 import os
 import socket
 import subprocess
@@ -96,13 +97,16 @@ def install_requirements(
         logger.error("Requirements file '%s' not found.", requirements_file)
 
 
-def setup_configurations(config_directory, hostname):
+def setup_configurations(
+    config_directory: str, hostname: str, grafana_image: str
+) -> None:
     """
     Sets up the required directories and creates YAML configuration files for each component.
 
     Args:
         config_directory (str): The base directory for configuration files.
         hostname (str): The hostname to be used in the configuration files.
+        grafana_image (str): The Grafana Docker image to use.
     """
     paths = (
         config_directory,
@@ -111,6 +115,7 @@ def setup_configurations(config_directory, hostname):
         os.path.join(config_directory, "crossbar"),
     )
     filenames = ("default.yaml", "docker-compose.yaml")
+    # Generate iteratively? meh
     configurations = (
         (paths[0], filenames[0], DEFAULT_YAML),
         (
@@ -138,17 +143,24 @@ def setup_configurations(config_directory, hostname):
     # Create directories and YAML configuration files for each component
     for [path, filename, template] in configurations:
         os.makedirs(path, exist_ok=True)
-        create_yaml_configuration(path, hostname, filename, template)
+        create_yaml_configuration(
+            path, hostname, filename, template, grafana_image
+        )
 
 
 def create_yaml_configuration(
-    directory_name: str, hostname: str, file_name: str, content_template: str
+    directory_name: str,
+    hostname: str,
+    file_name: str,
+    content_template: str,
+    grafana_image: str,
 ) -> None:
     content = textwrap.dedent(
         content_template.format(
             hostname=hostname,
             config_directory=os.path.abspath(directory_name),
             user=hostname,
+            grafana_image=grafana_image,
         )
     )
     with open(
@@ -203,7 +215,19 @@ def create_up_down_scripts(directory_name: str) -> None:
             logger.info("Script %s created at %s", script_name, file_path)
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Set up OCS configuration")
+    parser.add_argument(
+        "--grafana-image",
+        default="grafana/grafana:latest",
+        help="Grafana Docker image to use (default: grafana/grafana:latest)",
+    )
+    return parser.parse_args()
+
+
 def main():
+    args = parse_arguments()
+
     repo_url = "https://github.com/simonsobs/ocs.git"
     clone_directory = "ocs"
     requirements_file = os.path.join(clone_directory, "requirements.txt")
@@ -216,7 +240,7 @@ def main():
     python_executable = setup_virtual_environment(environment_directory)
     install_requirements(python_executable, requirements_file, clone_directory)
     handle_requirements_file(requirements_file, True)
-    setup_configurations(config_directory, hostname)
+    setup_configurations(config_directory, hostname, args.grafana_image)
     setup_bridge_network()
     create_up_down_scripts(config_directory)
 
