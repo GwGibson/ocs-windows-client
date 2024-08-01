@@ -7,7 +7,8 @@ This script automates the installation and initial configuration of the Observat
 - Clones the OCS repository
 - Sets up a virtual environment
 - Installs required OCS dependencies in the virtual environment
-- Configures OCS components (Grafana, InfluxDB, Crossbar)
+- Configures the Grafana, InfluxDB, and Crossbar components
+- Configures the InfluxDB Publisher Agent and Fake Data Agent
 - Creates the Docker network that connects the docker compose files
 - Generates up and down scripts for easy container management
 
@@ -24,14 +25,16 @@ This script automates the installation and initial configuration of the Observat
 
 ## Usage
 
-1. Clone this repository and navigate to the directory.
+1. Clone this repository (as of now https://github.com/GwGibson/ocs-windows-client) and navigate to the directory.
+
 ```bash
 git clone <repository-url>
 cd <repository-directory>
 ```
-2. Run the script. Optionally, specify a custom Grafana Docker image.
+
+2. Run the script. Optionally, specify a custom Grafana Docker image. The default image is `grafana/grafana:latest`
 ```bash
-python quickstart.py # default image is grafana/grafana:latest
+python quickstart.py
 python quickstart.py --grafana-image grafana/grafana:8.0.0  # Optional: custom Grafana image
 ```
 3. After the script completes, navigate to the `ocs-site-configs` directory.
