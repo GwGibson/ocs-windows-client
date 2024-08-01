@@ -200,9 +200,11 @@ def setup_bridge_network(network_name: str = "ocs-net"):
         else:
             logger.info("Docker network '%s' already exists.", network_name)
     except subprocess.CalledProcessError as e:
+        error_message = (
+            e.output.decode().strip() if e.output else "Is Docker running?"
+        )
         logger.error(
-            "Failed to list or create Docker network. Error: %s",
-            e.output.decode(),
+            "Failed to list or create Docker network. Error: %s", error_message
         )
 
 
