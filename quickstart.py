@@ -43,6 +43,8 @@ def handle_requirements_file(
     with open(requirements_file, "w", encoding="utf-8") as file:
         for line in lines:
             stripped_line = line.strip()
+            # Installing the testing requirements will fail on Windows and is 
+            # not really necessary if we are not developing the OCS code.
             if not reverse and stripped_line == "-r requirements/testing.txt":
                 file.write(f"# {line}")
             elif reverse and stripped_line == "# -r requirements/testing.txt":
