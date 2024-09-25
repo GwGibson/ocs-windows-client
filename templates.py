@@ -89,7 +89,7 @@ services:
         volumes:
             - grafana-storage:/var/lib/grafana
         environment:
-            - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=100ms
+            - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=50ms
 """
 
 CROSSBAR = """\
